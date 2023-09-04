@@ -42,7 +42,7 @@ app = Flask(__name__)
 
 # List all the available routes.
 @app.route("/")
-def welcome():
+def home():
     """List all available api routes."""
     return (
         f"Available Routes:<br/>"
