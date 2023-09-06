@@ -57,12 +57,16 @@ def home():
 
 @app.route("/api/v1.0/precipitation")
 def prcp():
+
+    prev_year = dt.date(2017, 8, 23) - dt.timedelta(days=365)
     # Create our session (link) from Python to the DB
-    # session = Session(engine)
-
-    # all_names = list(np.ravel(results))
-
-    return 
+    session = Session(engine)
+    precipitation = session.query(Measurement.date, Measurement.prcp).\
+        filter(Measurement.date >= prev_year).all()
+    
+    precip = {date: prcp for date, prcp in precipitation}
+    session.close()
+    return jsonify(precip)
 
 
 @app.route("/api/v1.0/stations")
@@ -111,38 +115,44 @@ def tobs():
 
 
 @app.route("/api/v1.0/<start>")
-def start():
+def start(start):
     # Create our session (link) from Python to the DB
-    # session = Session(engine)
+    session = Session(engine)
 
-    # """Return a list of all passenger names"""
-    # # Query all passengers
-    # results = session.query(Passenger.name).all()
+    start=dt.datetime.strptime(start, '%Y-%m-%d')
+    temperature = session.query(
+        func.min(Measurement.tobs),
+        func.avg(Measurement.tobs),
+        func.max(Measurement.tobs),
+        ).\
+        filter(Measurement.date >= start).\
+    all()
 
-    # session.close()
+    
+    session.close()
 
-    # # Convert list of tuples into normal list
-    # all_names = list(np.ravel(results))
+    return jsonify (list(np.ravel(temperature)))
 
-    return 
 @app.route("/api/v1.0/<start>/<end>")
-def startend():
-    # # Create our session (link) from Python to the DB
-    # session = Session(engine)
+def startend(start,end):
 
-    # """Return a list of all passenger names"""
-    # # Query all passengers
-    # results = session.query(Passenger.name).all()
+    start=dt.datetime.strptime(start, '%Y-%m-%d')
+    end=dt.datetime.strptime(end, '%Y-%m-%d')
+    
+    temperature = session.query(
+        func.min(Measurement.tobs),
+        func.avg(Measurement.tobs),
+        func.max(Measurement.tobs),
+        ).\
+        filter(Measurement.date >= start).\
+        filter(Measurement.date <= end).\
+    all()
 
-    # session.close()
+    session.close()
 
-    # # Convert list of tuples into normal list
-    # all_names = list(np.ravel(results))
+    return jsonify (list(np.ravel(temperature)))
 
-    return
-
-
-
+ 
 
 if __name__ == '__main__':
     app.run(debug=True)
