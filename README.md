@@ -3,9 +3,13 @@ a climate analysis of Hawaii
 
 ## Analyze and Explore the Climate Data
 Precipitation Over the Last Year
+
 ![1](https://github.com/wemlaztdj/sqlalchemy-challenge/assets/19890554/fafc32dc-6fee-4455-ac15-ad290cb57f81)
 
+
+
 last 12 months of temperature
+
 ![2](https://github.com/wemlaztdj/sqlalchemy-challenge/assets/19890554/17e04143-4ef5-47f3-8acb-b80dbd5c3acd)
 
 
