@@ -50,8 +50,10 @@ def home():
         f"/api/v1.0/precipitation<br/>"
         f"/api/v1.0/stations<br/>"
         f"/api/v1.0/tobs<br/>"
-        f"/api/v1.0/<start><br/>"
-        f"/api/v1.0/<start>/<end><br/>"
+        f"/api/v1.0/start<br/>"
+        f"like: <a href='/api/v1.0/2016-6-15'>/api/v1.0/2016-6-15</a><br/>"
+        f"/api/v1.0/start/end<br/>"
+        f"like: <a href='/api/v1.0/2016-6-15/2016-6-20'>/api/v1.0/2016-6-15/2016-6-20</a><br/>"
     )
 
 
@@ -120,6 +122,7 @@ def start(start):
     session = Session(engine)
 
     start=dt.datetime.strptime(start, '%Y-%m-%d')
+    
     temperature = session.query(
         func.min(Measurement.tobs),
         func.avg(Measurement.tobs),
@@ -130,8 +133,12 @@ def start(start):
 
     
     session.close()
-
-    return jsonify (list(np.ravel(temperature)))
+    try:
+        return jsonify (list(np.ravel(temperature)))
+    except:
+        "error"
+        return
+    
 
 @app.route("/api/v1.0/<start>/<end>")
 def startend(start,end):
@@ -149,9 +156,12 @@ def startend(start,end):
     all()
 
     session.close()
-
-    return jsonify (list(np.ravel(temperature)))
-
+    try:
+        return jsonify (list(np.ravel(temperature)))
+    except:
+        "error"
+        return 
+    
  
 
 if __name__ == '__main__':
